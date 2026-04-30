@@ -169,5 +169,6 @@
 
 .gtdown-root .cm-scroller {
   font-family: 'iA Writer Mono S', 'Fira Code', 'JetBrains Mono', Menlo, Consolas, monospace;
+  font-size: var(--font-text-size);
   line-height: 1.6;
 }
