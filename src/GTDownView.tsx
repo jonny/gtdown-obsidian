@@ -45,6 +45,8 @@ export class GTDownView extends TextFileView {
           this.currentContent = content;
           this.requestSave();
         }}
+        app={this.app}
+        getSourcePath={() => this.file?.path ?? ''}
       />
     );
   }

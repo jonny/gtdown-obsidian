@@ -75,6 +75,14 @@ const baseTheme = EditorView.baseTheme({
     fontSize: '0.85em',
   },
 
+  // Wikilinks [[...]]
+  '.cm-wikilink': {
+    color: 'var(--link-color)',
+    textDecoration: 'underline',
+    textDecorationColor: 'var(--link-color)',
+    cursor: 'pointer',
+  },
+
   // Drop indicator line
   '.cm-drop-indicator': {
     position: 'fixed',

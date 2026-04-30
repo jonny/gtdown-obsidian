@@ -6,14 +6,18 @@ import { tagDecorationPlugin } from './tagDecoration';
 import { projectDecorationPlugin } from './projectDecoration';
 import { strikethroughPlugin } from './strikethroughDecoration';
 import { noteDecorationPlugin } from './noteDecoration';
+import { wikilinkDecorationPlugin, wikilinkClickHandler } from './wikilinkDecoration';
 import { todoKeymap } from './keymap';
 import { filterTagField, filterHashField, filterProjectField, filterDecoField, tagClickHandler } from './tagFilter';
 import { baseTheme } from './theme';
+import type { App } from 'obsidian';
 
 export function createExtensions(
   onSave: () => void,
   onFilterChange?: (tags: string[]) => void,
   onHashFilterChange?: (tags: string[]) => void,
+  app?: App,
+  getSourcePath?: () => string,
 ) {
   return [
     history(),
@@ -29,6 +33,8 @@ export function createExtensions(
     projectDecorationPlugin,
     strikethroughPlugin,
     noteDecorationPlugin,
+    wikilinkDecorationPlugin,
+    ...(app && getSourcePath ? [wikilinkClickHandler(app, getSourcePath)] : []),
     keymap.of([
       ...todoKeymap,
       ...defaultKeymap,

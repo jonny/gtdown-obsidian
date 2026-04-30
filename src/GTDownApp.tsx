@@ -4,6 +4,7 @@ import { TodoEditor } from './editor/TodoEditor';
 import { Sidebar } from './Sidebar';
 import { setFilterEffect, setHashFilterEffect, setProjectFilterEffect } from './editor/tagFilter';
 import { isProjectLine } from './editor/projectDecoration';
+import type { App } from 'obsidian';
 
 function deleteArchive(content: string): string {
   const lines = content.split('\n');
@@ -52,9 +53,11 @@ function archiveDone(content: string): string {
 interface Props {
   onReady: (setContent: (c: string) => void) => void;
   onContentChange: (c: string) => void;
+  app?: App;
+  getSourcePath?: () => string;
 }
 
-export function GTDownApp({ onReady, onContentChange }: Props) {
+export function GTDownApp({ onReady, onContentChange, app, getSourcePath }: Props) {
   const [content, setContent] = useState('');
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [hashFilterTags, setHashFilterTags] = useState<string[]>([]);
@@ -154,6 +157,8 @@ export function GTDownApp({ onReady, onContentChange }: Props) {
           onHashFilterChange={setHashFilterTags}
           onEditorReady={(view) => { editorViewRef.current = view; }}
           onEditorDestroy={() => { editorViewRef.current = null; }}
+          app={app}
+          getSourcePath={getSourcePath}
         />
       </div>
     </div>

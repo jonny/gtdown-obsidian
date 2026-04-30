@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { EditorView } from '@codemirror/view';
 import { EditorState } from '@codemirror/state';
 import { createExtensions } from './extensions';
+import type { App } from 'obsidian';
 
 interface TodoEditorProps {
   initialContent: string;
@@ -11,9 +12,11 @@ interface TodoEditorProps {
   onHashFilterChange?: (tags: string[]) => void;
   onEditorReady?: (view: EditorView) => void;
   onEditorDestroy?: () => void;
+  app?: App;
+  getSourcePath?: () => string;
 }
 
-export function TodoEditor({ initialContent, onChange, onSave, onFilterChange, onHashFilterChange, onEditorReady, onEditorDestroy }: TodoEditorProps) {
+export function TodoEditor({ initialContent, onChange, onSave, onFilterChange, onHashFilterChange, onEditorReady, onEditorDestroy, app, getSourcePath }: TodoEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
@@ -40,6 +43,8 @@ export function TodoEditor({ initialContent, onChange, onSave, onFilterChange, o
           () => onSaveRef.current(),
           (tag) => onFilterChangeRef.current?.(tag),
           (tag) => onHashFilterChangeRef.current?.(tag),
+          app,
+          getSourcePath,
         ),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
