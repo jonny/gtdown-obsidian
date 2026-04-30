@@ -2,6 +2,8 @@
 
 A TaskPaper-style plain-text task editor for Obsidian. Opens `.gtd` files in a dedicated editor with filtering, tagging, and project organisation.
 
+![GTDown editor showing projects, tasks, tags, labels, and sidebar](docs/screenshot.png)
+
 ## Features
 
 - **TaskPaper format** — plain text `.gtd` files, readable and portable outside Obsidian
