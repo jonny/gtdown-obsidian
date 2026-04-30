@@ -43,11 +43,9 @@ export const wikilinkDecorationPlugin = ViewPlugin.fromClass(
 
 export function wikilinkClickHandler(app: App, getSourcePath: () => string) {
   return EditorView.domEventHandlers({
-    click(event: MouseEvent, view: EditorView) {
-      if (!event.metaKey) return false;
-      const target = event.target as HTMLElement;
-      if (!target.classList.contains('cm-wikilink')) return false;
-
+    // Use mousedown (not click) so we fire before CM6 moves the cursor,
+    // which would otherwise rebuild decorations and remove cm-wikilink from the span.
+    mousedown(event: MouseEvent, view: EditorView) {
       const pos = view.posAtCoords({ x: event.clientX, y: event.clientY });
       if (pos === null) return false;
 
@@ -58,7 +56,6 @@ export function wikilinkClickHandler(app: App, getSourcePath: () => string) {
         const start = line.from + m.index;
         const end = start + m[0].length;
         if (pos >= start && pos <= end) {
-          // [[link|display]] → use link part; [[link#heading]] preserved as-is
           const inner = m[1];
           const linkText = inner.includes('|') ? inner.split('|')[0] : inner;
           app.workspace.openLinkText(linkText.trim(), getSourcePath());
