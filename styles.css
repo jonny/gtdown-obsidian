@@ -1,1 +1,127 @@
-/* GTDown plugin styles */
+/* GTDown plugin styles — scoped under .gtdown-root */
+
+/* Map GTDown's color tokens to Obsidian's theme variables so the plugin
+   automatically respects the user's chosen Obsidian theme. */
+.gtdown-root {
+  --color-bg: var(--background-primary);
+  --color-surface: var(--background-secondary);
+  --color-border: var(--background-modifier-border);
+  --color-text: var(--text-normal);
+  --color-text-muted: var(--text-muted);
+  --color-heading: var(--text-normal);
+  --color-accent: var(--interactive-accent);
+  --color-selection: var(--text-selection, rgba(37, 99, 235, 0.15));
+  --color-tag-at: var(--color-blue, #0369a1);
+  --color-tag-hash: var(--color-purple, #7c3aed);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────── */
+.gtdown-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+.gtdown-editor-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 40px 20px 80px;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────── */
+.gtdown-root .sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-border);
+  padding: 16px 0;
+  background: var(--color-surface);
+}
+
+.gtdown-root .sidebar-section {
+  margin-bottom: 8px;
+}
+
+.gtdown-root .sidebar-heading {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: 4px 16px;
+  margin: 0 0 4px;
+}
+
+.gtdown-root .sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gtdown-root .sidebar-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 16px;
+  font-size: 13px;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.gtdown-root .sidebar-item:hover {
+  background: var(--background-modifier-hover, rgba(0,0,0,0.05));
+}
+
+.gtdown-root .sidebar-item--active {
+  color: var(--color-accent);
+  background: var(--color-selection);
+}
+
+.gtdown-root .sidebar-item--active:hover {
+  background: var(--color-selection);
+}
+
+.gtdown-root .sidebar-item--tag { color: var(--color-tag-at); }
+.gtdown-root .sidebar-item--hash { color: var(--color-tag-hash); }
+
+.gtdown-root .sidebar-empty {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  padding: 4px 16px;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ─── Editor ─────────────────────────────────────────────────── */
+.gtdown-root .editor-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.gtdown-root .cm-editor {
+  background: transparent;
+  outline: none;
+}
+
+.gtdown-root .cm-editor.cm-focused {
+  outline: none;
+}
+
+.gtdown-root .cm-scroller {
+  font-family: 'iA Writer Mono S', 'Fira Code', 'JetBrains Mono', Menlo, Consolas, monospace;
+  line-height: 1.6;
+}
