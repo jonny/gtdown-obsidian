@@ -8,17 +8,25 @@ export default class GTDownPlugin extends Plugin {
 
     // Explicitly set view type for .gtd files — registerExtensions alone doesn't
     // reliably redirect externally copied files that Obsidian treated as unknown types.
+    // Deferred so Obsidian finishes setting up the leaf before we inspect it.
     this.registerEvent(
       this.app.workspace.on("file-open", (file: TFile | null) => {
         if (!file || file.extension !== "gtd") return;
-        const leaf = this.app.workspace.getMostRecentLeaf();
-        if (leaf && leaf.view.getViewType() !== GTDOWN_VIEW_TYPE) {
-          leaf.setViewState({
-            type: GTDOWN_VIEW_TYPE,
-            state: { file: file.path },
-            active: true,
+        setTimeout(() => {
+          this.app.workspace.iterateAllLeaves((leaf) => {
+            const view = leaf.view as any;
+            if (
+              view.file?.path === file.path &&
+              leaf.view.getViewType() !== GTDOWN_VIEW_TYPE
+            ) {
+              leaf.setViewState({
+                type: GTDOWN_VIEW_TYPE,
+                state: { file: file.path },
+                active: true,
+              });
+            }
           });
-        }
+        }, 0);
       })
     );
 
