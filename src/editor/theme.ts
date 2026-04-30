@@ -67,6 +67,8 @@ const baseTheme = EditorView.baseTheme({
   // Note / description lines (indented text under a task)
   '.cm-line:has(.cm-note-line)': {
     paddingLeft: '1.5ch',
+    marginTop: '-0.15em',
+    marginBottom: '0.2em',
   },
   '.cm-note-line': {
     color: 'var(--text-faint)',
