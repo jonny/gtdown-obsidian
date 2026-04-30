@@ -11,6 +11,7 @@ interface SidebarProps {
   onSetFilter: (tag: string) => void;
   onSetHashFilter: (tag: string) => void;
   onArchiveDone: () => void;
+  onDeleteArchive: () => void;
 }
 
 const SAVED_SEARCHES = [
@@ -32,7 +33,7 @@ function Section({ title, children, pinBottom = false }: { title: string; childr
   );
 }
 
-export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilter, activeProjectFilter, onSetProjectFilter, onSetFilter, onSetHashFilter, onArchiveDone }: SidebarProps) {
+export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilter, activeProjectFilter, onSetProjectFilter, onSetFilter, onSetHashFilter, onArchiveDone, onDeleteArchive }: SidebarProps) {
   return (
     <aside className="sidebar">
       <Section title="Projects">
@@ -107,6 +108,11 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
           <li>
             <button className="sidebar-item sidebar-item--action" onClick={onArchiveDone}>
               Archive done
+            </button>
+          </li>
+          <li>
+            <button className="sidebar-item sidebar-item--action" onClick={onDeleteArchive}>
+              Delete archive
             </button>
           </li>
         </ul>

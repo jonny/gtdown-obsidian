@@ -5,6 +5,23 @@ import { Sidebar } from './Sidebar';
 import { setFilterEffect, setHashFilterEffect, setProjectFilterEffect } from './editor/tagFilter';
 import { isProjectLine } from './editor/projectDecoration';
 
+function deleteArchive(content: string): string {
+  const lines = content.split('\n');
+  let inDone = false;
+  const result: string[] = [];
+  for (const line of lines) {
+    if (isProjectLine(line)) {
+      inDone = line.replace(/:\s*$/, '').trim() === 'Done';
+      result.push(line);
+    } else if (inDone && /^\s*- /.test(line) && /@done/.test(line)) {
+      // drop it
+    } else {
+      result.push(line);
+    }
+  }
+  return result.join('\n');
+}
+
 function archiveDone(content: string): string {
   const lines = content.split('\n');
   let currentProject: string | null = null;
@@ -89,6 +106,17 @@ export function GTDownApp({ onReady, onContentChange }: Props) {
     onContentChange(c);
   }, [onContentChange]);
 
+  const handleDeleteArchive = useCallback(() => {
+    const cleaned = deleteArchive(content);
+    if (cleaned === content) return;
+    setContent(cleaned);
+    onContentChange(cleaned);
+    const view = editorViewRef.current;
+    if (view) {
+      view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: cleaned } });
+    }
+  }, [content, onContentChange]);
+
   const handleArchiveDone = useCallback(() => {
     const archived = archiveDone(content);
     if (archived === content) return;
@@ -115,6 +143,7 @@ export function GTDownApp({ onReady, onContentChange }: Props) {
         onSetHashFilter={handleSetHashFilter}
         onSetProjectFilter={handleSetProjectFilter}
         onArchiveDone={handleArchiveDone}
+        onDeleteArchive={handleDeleteArchive}
       />
       <div className="gtdown-editor-wrap">
         <TodoEditor
