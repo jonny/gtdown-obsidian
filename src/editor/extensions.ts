@@ -7,6 +7,7 @@ import { projectDecorationPlugin } from './projectDecoration';
 import { strikethroughPlugin } from './strikethroughDecoration';
 import { noteDecorationPlugin } from './noteDecoration';
 import { wikilinkDecorationPlugin, wikilinkClickHandler } from './wikilinkDecoration';
+import { wikilinkCompletion } from './wikilinkCompletion';
 import { todoKeymap } from './keymap';
 import { filterTagField, filterHashField, filterProjectField, filterDecoField, tagClickHandler } from './tagFilter';
 import { baseTheme } from './theme';
@@ -35,6 +36,7 @@ export function createExtensions(
     noteDecorationPlugin,
     wikilinkDecorationPlugin,
     ...(app && getSourcePath ? [wikilinkClickHandler(app, getSourcePath)] : []),
+    ...(app ? [wikilinkCompletion(app)] : []),
     keymap.of([
       ...todoKeymap,
       ...defaultKeymap,
