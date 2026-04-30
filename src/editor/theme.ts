@@ -65,9 +65,12 @@ const baseTheme = EditorView.baseTheme({
   },
 
   // Note / description lines (indented text under a task)
+  '.cm-line:has(.cm-note-line)': {
+    paddingLeft: '1.5ch',
+  },
   '.cm-note-line': {
-    color: 'var(--color-text-muted)',
-    fontSize: '0.92em',
+    color: 'var(--text-faint)',
+    fontSize: '0.85em',
   },
 
   // Drop indicator line
