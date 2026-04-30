@@ -61,6 +61,7 @@
 .gtdown-root .sidebar-heading--toggle {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 4px;
   width: 100%;
   background: none;
@@ -68,6 +69,13 @@
   cursor: pointer;
   text-align: left;
   box-shadow: none;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: 4px 16px;
+  margin: 0 0 4px;
 }
 
 .gtdown-root .sidebar-heading--toggle:hover {
