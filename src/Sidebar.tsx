@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 interface SidebarProps {
   projects: Array<{ name: string; lineNum: number }>;
   tags: string[];
@@ -16,11 +18,23 @@ const SAVED_SEARCHES = [
   { label: 'Done', filter: '@done' },
 ];
 
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <section className="sidebar-section">
+      <button className="sidebar-heading sidebar-heading--toggle" onClick={() => setOpen(o => !o)}>
+        <span className={`sidebar-chevron${open ? '' : ' sidebar-chevron--collapsed'}`}>›</span>
+        {title}
+      </button>
+      {open && children}
+    </section>
+  );
+}
+
 export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilter, activeProjectFilter, onSetProjectFilter, onSetFilter, onSetHashFilter }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <section className="sidebar-section">
-        <h3 className="sidebar-heading">Projects</h3>
+      <Section title="Projects">
         {projects.length === 0 ? (
           <p className="sidebar-empty">No projects yet</p>
         ) : (
@@ -37,10 +51,9 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
             ))}
           </ul>
         )}
-      </section>
+      </Section>
 
-      <section className="sidebar-section">
-        <h3 className="sidebar-heading">Searches</h3>
+      <Section title="Searches">
         <ul className="sidebar-list">
           {SAVED_SEARCHES.map(({ label, filter }) => (
             <li key={filter}>
@@ -53,11 +66,10 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
       {tags.length > 0 && (
-        <section className="sidebar-section">
-          <h3 className="sidebar-heading">Tags</h3>
+        <Section title="Tags">
           <ul className="sidebar-list">
             {tags.map((tag) => (
               <li key={tag}>
@@ -70,12 +82,11 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       )}
 
       {hashtags.length > 0 && (
-        <section className="sidebar-section">
-          <h3 className="sidebar-heading">Labels</h3>
+        <Section title="Labels">
           <ul className="sidebar-list">
             {hashtags.map((tag) => (
               <li key={tag}>
@@ -88,7 +99,7 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       )}
     </aside>
   );

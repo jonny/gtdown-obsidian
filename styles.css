@@ -58,6 +58,35 @@
   margin: 0 0 4px;
 }
 
+.gtdown-root .sidebar-heading--toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: none;
+}
+
+.gtdown-root .sidebar-heading--toggle:hover {
+  color: var(--color-text);
+}
+
+.gtdown-root .sidebar-chevron {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1;
+  transform: rotate(90deg);
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.gtdown-root .sidebar-chevron--collapsed {
+  transform: rotate(0deg);
+}
+
 .gtdown-root .sidebar-list {
   list-style: none;
   margin: 0;
