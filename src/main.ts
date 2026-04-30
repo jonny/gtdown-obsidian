@@ -1,4 +1,4 @@
-import { Plugin, TFile } from "obsidian";
+import { Notice, Plugin, TFile } from "obsidian";
 import { GTDownView, GTDOWN_VIEW_TYPE } from "./GTDownView";
 
 export default class GTDownPlugin extends Plugin {
@@ -33,7 +33,7 @@ export default class GTDownPlugin extends Plugin {
       id: "new-gtd-file",
       name: "New GTDown file",
       callback: async () => {
-        const path = this.unusedPath("Untitled.gtd");
+        const path = await this.unusedPath("Untitled.gtd");
         await this.app.vault.create(path, "Inbox:\n\t- \n");
         await this.openGtdPath(path);
       },
@@ -51,13 +51,16 @@ export default class GTDownPlugin extends Plugin {
   private async importGtdFile(): Promise<void> {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = ".gtd";
     input.multiple = true;
     input.onchange = async () => {
-      const files = Array.from(input.files ?? []);
+      const files = Array.from(input.files ?? []).filter((f) => {
+        if (f.name.endsWith(".gtd")) return true;
+        new Notice(`Skipped "${f.name}" — not a .gtd file`);
+        return false;
+      });
       for (const f of files) {
         const content = await f.text();
-        const path = this.unusedPath(f.name);
+        const path = await this.unusedPath(f.name);
         await this.app.vault.create(path, content);
         await this.openGtdPath(path);
       }
@@ -75,13 +78,18 @@ export default class GTDownPlugin extends Plugin {
   }
 
   // Returns a vault path that doesn't already exist, appending -1, -2 etc if needed.
-  private unusedPath(filename: string): string {
+  // Checks both the vault registry and the filesystem to catch files that exist on
+  // disk but aren't indexed (e.g. copied externally before the plugin was active).
+  private async unusedPath(filename: string): Promise<string> {
     const dot = filename.lastIndexOf(".");
     const base = dot >= 0 ? filename.slice(0, dot) : filename;
     const ext = dot >= 0 ? filename.slice(dot) : "";
     let path = filename;
     let n = 1;
-    while (this.app.vault.getAbstractFileByPath(path)) {
+    while (
+      this.app.vault.getAbstractFileByPath(path) ||
+      (await this.app.vault.adapter.exists(path))
+    ) {
       path = `${base}-${n}${ext}`;
       n++;
     }
