@@ -1,0 +1,10 @@
+{
+  "id": "gtdown",
+  "name": "GTDown",
+  "author": "jonny",
+  "authorUrl": "",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "TaskPaper-style todo editor for .gtd files",
+  "isDesktopOnly": false
+}
