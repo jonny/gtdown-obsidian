@@ -34,9 +34,8 @@ export default class GTDownPlugin extends Plugin {
       name: "New GTDown file",
       callback: async () => {
         const path = this.unusedPath("Untitled.gtd");
-        const file = await this.app.vault.create(path, "Inbox:\n\t- \n");
-        const leaf = this.app.workspace.getLeaf(false);
-        await leaf.openFile(file);
+        await this.app.vault.create(path, "Inbox:\n\t- \n");
+        await this.openGtdPath(path);
       },
     });
 
@@ -59,12 +58,20 @@ export default class GTDownPlugin extends Plugin {
       for (const f of files) {
         const content = await f.text();
         const path = this.unusedPath(f.name);
-        const created = await this.app.vault.create(path, content);
-        const leaf = this.app.workspace.getLeaf(files.length === 1 ? false : true);
-        await leaf.openFile(created);
+        await this.app.vault.create(path, content);
+        await this.openGtdPath(path);
       }
     };
     input.click();
+  }
+
+  private async openGtdPath(path: string): Promise<void> {
+    const leaf = this.app.workspace.getLeaf(false);
+    await leaf.setViewState({
+      type: GTDOWN_VIEW_TYPE,
+      state: { file: path },
+      active: true,
+    });
   }
 
   // Returns a vault path that doesn't already exist, appending -1, -2 etc if needed.
