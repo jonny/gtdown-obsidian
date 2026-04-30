@@ -5,6 +5,33 @@ import { Sidebar } from './Sidebar';
 import { setFilterEffect, setHashFilterEffect, setProjectFilterEffect } from './editor/tagFilter';
 import { isProjectLine } from './editor/projectDecoration';
 
+function archiveDone(content: string): string {
+  const lines = content.split('\n');
+  let currentProject: string | null = null;
+  const lineProjects = lines.map(line => {
+    if (isProjectLine(line)) currentProject = line.replace(/:\s*$/, '').trim();
+    return currentProject;
+  });
+  const doneTasks: string[] = [];
+  const remaining: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*- /.test(lines[i]) && /@done/.test(lines[i]) && lineProjects[i] !== 'Done') {
+      doneTasks.push(lines[i]);
+    } else {
+      remaining.push(lines[i]);
+    }
+  }
+  if (doneTasks.length === 0) return content;
+  const doneIdx = remaining.findIndex(l => isProjectLine(l) && l.replace(/:\s*$/, '').trim() === 'Done');
+  if (doneIdx !== -1) {
+    remaining.splice(doneIdx + 1, 0, ...doneTasks);
+  } else {
+    while (remaining.length > 0 && remaining[remaining.length - 1].trim() === '') remaining.pop();
+    remaining.push('', 'Done:', ...doneTasks, '');
+  }
+  return remaining.join('\n');
+}
+
 interface Props {
   onReady: (setContent: (c: string) => void) => void;
   onContentChange: (c: string) => void;
@@ -62,6 +89,19 @@ export function GTDownApp({ onReady, onContentChange }: Props) {
     onContentChange(c);
   }, [onContentChange]);
 
+  const handleArchiveDone = useCallback(() => {
+    const archived = archiveDone(content);
+    if (archived === content) return;
+    setContent(archived);
+    onContentChange(archived);
+    const view = editorViewRef.current;
+    if (view) {
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: archived },
+      });
+    }
+  }, [content, onContentChange]);
+
   return (
     <div className="gtdown-layout">
       <Sidebar
@@ -74,6 +114,7 @@ export function GTDownApp({ onReady, onContentChange }: Props) {
         onSetFilter={handleSetFilter}
         onSetHashFilter={handleSetHashFilter}
         onSetProjectFilter={handleSetProjectFilter}
+        onArchiveDone={handleArchiveDone}
       />
       <div className="gtdown-editor-wrap">
         <TodoEditor

@@ -42,6 +42,14 @@
   border-right: 1px solid var(--color-border);
   padding: 16px 0;
   background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.gtdown-root .sidebar-section--bottom {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+  padding-top: 8px;
 }
 
 .gtdown-root .sidebar-section {
@@ -134,6 +142,7 @@
 
 .gtdown-root .sidebar-item--tag { color: var(--color-tag-at); }
 .gtdown-root .sidebar-item--hash { color: var(--color-tag-hash); }
+.gtdown-root .sidebar-item--action { color: var(--color-text-muted); }
 
 .gtdown-root .sidebar-empty {
   font-size: 12px;

@@ -10,6 +10,7 @@ interface SidebarProps {
   onSetProjectFilter: (project: string | null) => void;
   onSetFilter: (tag: string) => void;
   onSetHashFilter: (tag: string) => void;
+  onArchiveDone: () => void;
 }
 
 const SAVED_SEARCHES = [
@@ -18,10 +19,10 @@ const SAVED_SEARCHES = [
   { label: 'Done', filter: '@done' },
 ];
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, pinBottom = false }: { title: string; children: React.ReactNode; pinBottom?: boolean }) {
   const [open, setOpen] = useState(true);
   return (
-    <section className="sidebar-section">
+    <section className={`sidebar-section${pinBottom ? ' sidebar-section--bottom' : ''}`}>
       <button className="sidebar-heading sidebar-heading--toggle" onClick={() => setOpen(o => !o)}>
         <span className={`sidebar-chevron${open ? '' : ' sidebar-chevron--collapsed'}`}>›</span>
         {title}
@@ -31,7 +32,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilter, activeProjectFilter, onSetProjectFilter, onSetFilter, onSetHashFilter }: SidebarProps) {
+export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilter, activeProjectFilter, onSetProjectFilter, onSetFilter, onSetHashFilter, onArchiveDone }: SidebarProps) {
   return (
     <aside className="sidebar">
       <Section title="Projects">
@@ -101,6 +102,15 @@ export function Sidebar({ projects, tags, hashtags, activeFilter, activeHashFilt
           </ul>
         </Section>
       )}
+      <Section title="Actions" pinBottom>
+        <ul className="sidebar-list">
+          <li>
+            <button className="sidebar-item sidebar-item--action" onClick={onArchiveDone}>
+              Archive done
+            </button>
+          </li>
+        </ul>
+      </Section>
     </aside>
   );
 }
