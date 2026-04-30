@@ -94,9 +94,10 @@ The editor is a CodeMirror 6 `EditorView` instance created inside the GTDownView
 |---|---|
 | Project header (`Project:`) | Bold, 1.1em, heading colour, bottom border |
 | `@done` task | Strikethrough, 45% opacity |
-| Note line | 0.92em, muted colour |
+| Note line | 0.85em, faint colour, indented 1.5ch to align with task text, tighter spacing above than below |
 | `@tag` | Sky-blue, weight 500 |
 | `#label` | Purple, weight 500 |
+| `[[wikilink]]` | Obsidian link colour, underlined |
 
 Decorations are suppressed on the cursor's current line to prevent flicker during editing.
 
@@ -179,6 +180,7 @@ Collapsible sections — each heading is a toggle button with a rotating `›` c
 | Action | Behaviour |
 |---|---|
 | Archive Done | Moves all `@done` tasks outside the Done section into Done, creating it if absent |
+| Delete Archive | Permanently removes all `@done` tasks from within the Done section only |
 
 ---
 
@@ -190,6 +192,35 @@ Moves all `@done` tasks from their original locations into a "Done:" section.
 2. If "Done:" exists, appends collected tasks at the bottom of it
 3. If not, creates "Done:" at the end of the document
 4. Removes tasks from their source positions
+
+## Delete Archive
+
+Permanently deletes `@done` tasks from within the "Done:" section only. Tasks in other sections are not affected. Leaves the "Done:" header in place.
+
+---
+
+## Wikilinks
+
+GTDown supports Obsidian internal links (`[[Note name]]`) embedded anywhere in task, note, or project lines.
+
+### Styling
+
+`[[...]]` spans are decorated with `--link-color` and underlined. The decoration is suppressed on the active cursor line (consistent with other decorations) so editing remains clean.
+
+### Navigation
+
+**Click** any `[[wikilink]]` to open the linked note in Obsidian. The handler fires on `mousedown` (not `click`) to avoid a race condition where CM6 moves the cursor — which rebuilds decorations and removes the link class — before the click event fires.
+
+Navigation is handled via `app.workspace.openLinkText(linkText, sourcePath)`. Supported formats:
+- `[[Note name]]` — opens by filename
+- `[[Note name|display text]]` — link part used for navigation, display text shown in editor
+- `[[Note name#Heading]]` — heading anchor preserved in the link
+
+### Autocomplete
+
+Typing `[[` triggers a dropdown picker of all Markdown files in the vault. The list filters as you continue typing. Selecting a file inserts `filename]]` and moves the cursor past the closing brackets.
+
+Implementation: CM6 `autocompletion()` with a custom source (`wikilinkCompletion.ts`) that calls `app.vault.getMarkdownFiles()`. `validFor: /^[^\]]*$/` keeps the picker active while typing inside the brackets.
 
 ---
 
