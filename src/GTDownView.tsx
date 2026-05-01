@@ -34,7 +34,7 @@ export class GTDownView extends TextFileView {
     this.updateContent?.("");
   }
 
-  async onOpen(): Promise<void> {
+  onOpen(): Promise<void> {
     const container = this.containerEl.children[1] as HTMLElement;
     container.addClass("gtdown-root");
     this.root = createRoot(container);
@@ -49,11 +49,13 @@ export class GTDownView extends TextFileView {
         getSourcePath={() => this.file?.path ?? ''}
       />
     );
+    return Promise.resolve();
   }
 
-  async onClose(): Promise<void> {
+  onClose(): Promise<void> {
     this.updateContent = null;
     this.root?.unmount();
     this.root = null;
+    return Promise.resolve();
   }
 }

@@ -66,8 +66,7 @@ export function GTDownApp({ onReady, onContentChange, app, getSourcePath }: Prop
 
   useEffect(() => {
     onReady(setContent);
-  // onReady is stable (passed from GTDownView constructor scope) — no dep needed
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable (bound to GTDownView instance, never changes)
   }, []);
 
   const { projects, allTags, allHashtags } = useMemo(() => {

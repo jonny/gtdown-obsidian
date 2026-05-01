@@ -58,7 +58,7 @@ export function wikilinkClickHandler(app: App, getSourcePath: () => string) {
         if (pos >= start && pos <= end) {
           const inner = m[1];
           const linkText = inner.includes('|') ? inner.split('|')[0] : inner;
-          app.workspace.openLinkText(linkText.trim(), getSourcePath());
+          void app.workspace.openLinkText(linkText.trim(), getSourcePath());
           event.preventDefault();
           return true;
         }

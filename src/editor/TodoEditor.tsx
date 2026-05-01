@@ -69,7 +69,7 @@ export function TodoEditor({ initialContent, onChange, onSave, onFilterChange, o
       view.destroy();
       viewRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- editor created once on mount; props are accessed via stable refs
   }, []);
 
   // When initialContent changes (new file opened), update the editor doc

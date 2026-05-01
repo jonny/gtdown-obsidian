@@ -49,7 +49,7 @@ export function createExtensions(
       {
         key: 'Mod-Shift-c',
         run: (view) => {
-          navigator.clipboard.writeText(view.state.doc.toString());
+          void navigator.clipboard.writeText(view.state.doc.toString());
           return true;
         },
         preventDefault: true,

@@ -2,7 +2,7 @@ import { Notice, Plugin, TFile } from "obsidian";
 import { GTDownView, GTDOWN_VIEW_TYPE } from "./GTDownView";
 
 export default class GTDownPlugin extends Plugin {
-  async onload() {
+  onload(): Promise<void> {
     this.registerView(GTDOWN_VIEW_TYPE, (leaf) => new GTDownView(leaf));
     this.registerExtensions(["gtd"], GTDOWN_VIEW_TYPE);
 
@@ -18,7 +18,7 @@ export default class GTDownPlugin extends Plugin {
               state.state?.file === file.path &&
               leaf.view.getViewType() !== GTDOWN_VIEW_TYPE
             ) {
-              leaf.setViewState({
+              void leaf.setViewState({
                 type: GTDOWN_VIEW_TYPE,
                 state: { file: file.path },
                 active: true,
@@ -31,7 +31,7 @@ export default class GTDownPlugin extends Plugin {
 
     this.addCommand({
       id: "new-gtd-file",
-      name: "New GTDown file",
+      name: "New file",
       callback: async () => {
         const path = await this.unusedPath("Untitled.gtd");
         await this.app.vault.create(path, "Inbox:\n\t- \n");
@@ -41,14 +41,15 @@ export default class GTDownPlugin extends Plugin {
 
     this.addCommand({
       id: "import-gtd-file",
-      name: "Import GTDown file",
+      name: "Import file",
       callback: () => this.importGtdFile(),
     });
+    return Promise.resolve();
   }
 
   onunload() {}
 
-  private async importGtdFile(): Promise<void> {
+  private importGtdFile(): void {
     const input = document.createElement("input");
     input.type = "file";
     input.multiple = true;
