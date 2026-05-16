@@ -42,7 +42,7 @@ export const filterProjectField = StateField.define<string | null>({
 // Zero-height block widget used to collapse hidden lines
 class HiddenRangeWidget extends WidgetType {
   eq() { return true; }
-  toDOM() { return document.createElement('div'); }
+  toDOM() { return createDiv(); }
   get estimatedHeight() { return 0; }
   ignoreEvent() { return true; }
 }

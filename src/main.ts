@@ -11,7 +11,7 @@ export default class GTDownPlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on("file-open", (file: TFile | null) => {
         if (!file || file.extension !== "gtd") return;
-        setTimeout(() => {
+        activeWindow.setTimeout(() => {
           this.app.workspace.iterateAllLeaves((leaf) => {
             const state = leaf.getViewState();
             if (
@@ -50,7 +50,7 @@ export default class GTDownPlugin extends Plugin {
   onunload() {}
 
   private importGtdFile(): void {
-    const input = document.createElement("input");
+    const input = createEl("input");
     input.type = "file";
     input.multiple = true;
     input.onchange = async () => {
