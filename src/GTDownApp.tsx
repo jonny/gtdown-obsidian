@@ -6,17 +6,28 @@ import { setFilterEffect, setHashFilterEffect, setProjectFilterEffect } from './
 import { isProjectLine } from './editor/projectDecoration';
 import type { App } from 'obsidian';
 
+function isNoteLine(line: string): boolean {
+  const trimmed = line.trim();
+  return trimmed.length > 0 && !isProjectLine(line) && !/^\s*- /.test(line);
+}
+
 function deleteArchive(content: string): string {
   const lines = content.split('\n');
   let inDone = false;
+  let afterDoneTask = false;
   const result: string[] = [];
   for (const line of lines) {
     if (isProjectLine(line)) {
       inDone = line.replace(/:\s*$/, '').trim() === 'Done';
+      afterDoneTask = false;
       result.push(line);
     } else if (inDone && /^\s*- /.test(line) && /@done/.test(line)) {
+      afterDoneTask = true;
       // drop it
+    } else if (inDone && afterDoneTask && isNoteLine(line)) {
+      // drop note lines belonging to the archived task
     } else {
+      afterDoneTask = false;
       result.push(line);
     }
   }
@@ -32,11 +43,18 @@ function archiveDone(content: string): string {
   });
   const doneTasks: string[] = [];
   const remaining: string[] = [];
-  for (let i = 0; i < lines.length; i++) {
+  let i = 0;
+  while (i < lines.length) {
     if (/^\s*- /.test(lines[i]) && /@done/.test(lines[i]) && lineProjects[i] !== 'Done') {
       doneTasks.push(lines[i]);
+      i++;
+      while (i < lines.length && isNoteLine(lines[i])) {
+        doneTasks.push(lines[i]);
+        i++;
+      }
     } else {
       remaining.push(lines[i]);
+      i++;
     }
   }
   if (doneTasks.length === 0) return content;
