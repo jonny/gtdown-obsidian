@@ -1,6 +1,6 @@
 {
   "name": "gtdown-obsidian",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "GTDown Obsidian plugin — TaskPaper-style todo editor",
   "main": "main.js",
   "scripts": {
